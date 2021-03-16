@@ -18,6 +18,7 @@ public class Window {
 
     private String title;
 
+    public Input input;
     private int frames;
     private long time;
 
@@ -25,7 +26,7 @@ public class Window {
         this.width = w;
         this.height = h;
         this.title = t;
-
+        input = new Input();
         init();
 
         time = System.currentTimeMillis();
@@ -79,6 +80,17 @@ public class Window {
         System.out.println("OpenGL: " + glGetString(GL_VERSION));
     }
 
+    public void setInput(Input input){
+        // Set input callbacks
+        glfwSetKeyCallback(glfwWindow, input.getKeyboardCallback());
+        glfwSetCursorPosCallback(glfwWindow, input.getMouseMoveCallback());
+        glfwSetMouseButtonCallback(glfwWindow, input.getMouseClickCallback());
+    }
+
+    public void close(){
+        glfwSetWindowShouldClose(glfwWindow , true);
+    }
+
     public void update(){
         glfwPollEvents();
 
@@ -100,4 +112,10 @@ public class Window {
         return glfwWindowShouldClose(glfwWindow);
     }
 
+    public void destroy(){
+        input.destroy();
+        glfwWindowShouldClose(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+        glfwTerminate();
+    }
 }
