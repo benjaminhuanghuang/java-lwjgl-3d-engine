@@ -1,6 +1,7 @@
 package ben.study.engine;
 
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -21,6 +22,11 @@ public class Window {
     public Input input;
     private int frames;
     private long time;
+
+    private float backgroundR, backgroundG, backgroundB;
+
+    private GLFWWindowSizeCallback sizeCallback;
+
 
     public Window(int w, int h, String t) {
         this.width = w;
@@ -64,6 +70,14 @@ public class Window {
         // Enable v-sync
         glfwSwapInterval(1);
 
+        sizeCallback = new GLFWWindowSizeCallback(){
+            @Override
+            public void invoke(long window, int w, int h) {
+                width = w;
+                height = h;
+            }
+        };
+
         glfwShowWindow(glfwWindow);
 
         // This line is critical for LWJGL's interoperation with GLFW's
@@ -80,39 +94,50 @@ public class Window {
         System.out.println("OpenGL: " + glGetString(GL_VERSION));
     }
 
-    public void setInput(Input input){
+    public void setInput(Input input) {
         // Set input callbacks
         glfwSetKeyCallback(glfwWindow, input.getKeyboardCallback());
         glfwSetCursorPosCallback(glfwWindow, input.getMouseMoveCallback());
         glfwSetMouseButtonCallback(glfwWindow, input.getMouseClickCallback());
     }
 
-    public void close(){
-        glfwSetWindowShouldClose(glfwWindow , true);
+    public void close() {
+        glfwSetWindowShouldClose(glfwWindow, true);
     }
 
-    public void update(){
+    public void update() {
+        glViewport(0,0, width, height);
+
+        // clear window
+        glClearColor(backgroundR, backgroundG, backgroundB, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         glfwPollEvents();
 
         frames++;
         // how many frames per second
-        if(System.currentTimeMillis() > time + 1000){
+        if (System.currentTimeMillis() > time + 1000) {
             glfwSetWindowTitle(glfwWindow, title + " | FPS: " + frames);
             time = System.currentTimeMillis();
             frames = 0;
         }
     }
 
-    public void swapBuffers()
-    {
+    public void swapBuffers() {
         glfwSwapBuffers(glfwWindow);
     }
 
-    public boolean shouldClose(){
+    public boolean shouldClose() {
         return glfwWindowShouldClose(glfwWindow);
     }
 
-    public void destroy(){
+    public void setBackgroundColor(float r, float g, float b){
+        this.backgroundR = r;
+        this.backgroundG = g;
+        this.backgroundB = b;
+    }
+
+    public void destroy() {
         input.destroy();
         glfwWindowShouldClose(glfwWindow);
         glfwDestroyWindow(glfwWindow);
