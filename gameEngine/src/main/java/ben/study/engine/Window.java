@@ -24,8 +24,9 @@ public class Window {
     private long time;
 
     private float backgroundR, backgroundG, backgroundB;
-
-    private GLFWWindowSizeCallback sizeCallback;
+    private boolean isResized;
+    private boolean isFullscreen;
+    private int[] windowPosX = new int[1], windowPosY = new int[1];
 
 
     public Window(int w, int h, String t) {
@@ -50,19 +51,16 @@ public class Window {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create window
-        glfwWindow = glfwCreateWindow(width, height, "Flappy", NULL, NULL);
+        glfwWindow = glfwCreateWindow(width, height, title, isFullscreen ? glfwGetPrimaryMonitor() : 0, NULL);
         if (glfwWindow == NULL) {
             System.err.println("Could not create GLFW window!");
             return;
         }
 
-        GLFWVidMode videomode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-        glfwSetWindowPos(
-                glfwWindow,
-                (videomode.width() - width) / 2,
-                (videomode.height() - height) / 2
-        );
+        GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        windowPosX[0] = (videoMode.width() - width) / 2;
+        windowPosY[0] = (videoMode.height() - height) / 2;
+        glfwSetWindowPos(glfwWindow, windowPosX[0], windowPosY[0]);
 
 
         // Make the OpenGL context current
@@ -70,13 +68,14 @@ public class Window {
         // Enable v-sync
         glfwSwapInterval(1);
 
-        sizeCallback = new GLFWWindowSizeCallback(){
+        glfwSetWindowSizeCallback(glfwWindow, new GLFWWindowSizeCallback(){
             @Override
             public void invoke(long window, int w, int h) {
                 width = w;
                 height = h;
+                isResized = true;
             }
-        };
+        });
 
         glfwShowWindow(glfwWindow);
 
@@ -99,6 +98,7 @@ public class Window {
         glfwSetKeyCallback(glfwWindow, input.getKeyboardCallback());
         glfwSetCursorPosCallback(glfwWindow, input.getMouseMoveCallback());
         glfwSetMouseButtonCallback(glfwWindow, input.getMouseClickCallback());
+        glfwSetScrollCallback(glfwWindow, input.getMouseScrollCallback());
     }
 
     public void close() {
@@ -106,7 +106,10 @@ public class Window {
     }
 
     public void update() {
-        glViewport(0,0, width, height);
+        if (isResized) {
+            glViewport(0, 0, width, height);
+            isResized = false;
+        }
 
         // clear window
         glClearColor(backgroundR, backgroundG, backgroundB, 1.0f);
@@ -135,6 +138,20 @@ public class Window {
         this.backgroundR = r;
         this.backgroundG = g;
         this.backgroundB = b;
+    }
+    public boolean isFullscreen() {
+        return isFullscreen;
+    }
+
+    public void setFullscreen(boolean isFullscreen) {
+        this.isFullscreen = isFullscreen;
+        isResized = true;
+        if (isFullscreen) {
+            glfwGetWindowPos(glfwWindow, windowPosX, windowPosY);
+            glfwSetWindowMonitor(glfwWindow, glfwGetPrimaryMonitor(), 0, 0, width, height, 0);
+        } else {
+            glfwSetWindowMonitor(glfwWindow, 0, windowPosX[0], windowPosY[0], width, height, 0);
+        }
     }
 
     public void destroy() {

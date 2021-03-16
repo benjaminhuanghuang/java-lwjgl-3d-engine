@@ -17,9 +17,8 @@ public class Game {
 
     public static void main(String[] args) {
         init();
-        while(!win.shouldClose()){
+        while(!win.shouldClose() && !input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)){
             win.update();
-
 
             win.swapBuffers();
 
@@ -27,7 +26,9 @@ public class Game {
             if(input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)){
                 win.close();
             }
-
+            if (input.isKeyDown(GLFW.GLFW_KEY_0)) {
+                win.setFullscreen(!win.isFullscreen());
+            }
             if(input.isButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT)){
                 System.out.println("X: " + input.getMouseX()+ ", Y:" + input.getMouseY() );
             }
