@@ -50,7 +50,7 @@ public class Game {
         init();
         while (!win.shouldClose() && !input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
             win.update();
-            obj.update();
+            //obj.update();
 
 
             renderer.renderMesh(obj, camera);
