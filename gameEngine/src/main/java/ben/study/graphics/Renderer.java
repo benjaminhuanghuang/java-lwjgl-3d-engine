@@ -4,12 +4,15 @@ import org.lwjgl.opengl.*;
 
 public class Renderer {
     private Shader shader;
+    private double scale;
 
     public Renderer(Shader shader) {
         this.shader = shader;
     }
 
     public void renderMesh(Mesh mesh) {
+        scale += 0.02;
+
         GL30.glBindVertexArray(mesh.getVAO());
         GL30.glEnableVertexAttribArray(0);
         GL30.glEnableVertexAttribArray(1);
@@ -20,7 +23,7 @@ public class Renderer {
         shader.bind();
 
         // Use uniform
-        shader.setUniform("scale", 2.0f);
+        shader.setUniform("scale", (float)Math.sin(scale));
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.getIndices().length, GL11.GL_UNSIGNED_INT, 0);
         shader.unbind();
