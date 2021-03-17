@@ -3,10 +3,8 @@ package ben.study;
 import ben.study.engine.Input;
 import ben.study.engine.Window;
 import ben.study.engine.maths.Vector3f;
-import ben.study.graphics.Mesh;
-import ben.study.graphics.Renderer;
-import ben.study.graphics.Shader;
-import ben.study.graphics.Vertex;
+import ben.study.engine.maths.Vector2f;
+import ben.study.graphics.*;
 import org.lwjgl.glfw.GLFW;
 
 public class Game {
@@ -15,25 +13,27 @@ public class Game {
     public static Renderer renderer;
     public static Shader shader;
 
-    public static Mesh mesh = new Mesh(new Vertex[]{
-            new Vertex(new Vector3f(-0.5f,  0.5f, 0.0f), new Vector3f(1.0f, 0.0f, 0.0f)),
-            new Vertex(new Vector3f(-0.5f, -0.5f, 0.0f), new Vector3f(0.0f, 1.0f, 0.0f)),
-            new Vertex(new Vector3f( 0.5f, -0.5f, 0.0f), new Vector3f(0.0f, 0.0f, 1.0f)),
-            new Vertex(new Vector3f( 0.5f,  0.5f, 0.0f), new Vector3f(1.0f, 1.0f, 0.0f))
-    }, new int[]{
-            0, 1, 2,
-            0, 3, 2
-    });
+    public static Mesh mesh;
 
     public static void init() {
         input = new Input();
         win = new Window(1280, 760, "Game");
         win.setBackgroundColor(2.0f, 2.0f, 3.0f);
         win.setInput(input);
-        mesh.create();
-        shader = new Shader("shaders/main.vert", "shaders/main.frag");
+        shader = new Shader("shaders/texture.vert", "shaders/texture.frag");
         shader.create();
         renderer = new Renderer(shader);
+
+        mesh = new Mesh(new Vertex[]{
+                new Vertex(new Vector3f(-0.5f,  0.5f, 0.0f), new Vector3f(1.0f, 0.0f, 0.0f), new Vector2f(0.0f, 0.0f)),
+                new Vertex(new Vector3f(-0.5f, -0.5f, 0.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector2f(0.0f, 1.0f)),
+                new Vertex(new Vector3f( 0.5f, -0.5f, 0.0f), new Vector3f(0.0f, 0.0f, 1.0f), new Vector2f(1.0f, 1.0f)),
+                new Vertex(new Vector3f( 0.5f,  0.5f, 0.0f), new Vector3f(1.0f, 1.0f, 0.0f), new Vector2f(1.0f, 0.0f))
+        }, new int[]{
+                0, 1, 2,
+                0, 3, 2
+        },new Texture("textures/image.png"));
+        mesh.create();
     }
 
     public static void main(String[] args) {
