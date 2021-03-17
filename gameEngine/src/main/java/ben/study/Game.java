@@ -4,6 +4,7 @@ import ben.study.engine.Input;
 import ben.study.engine.Window;
 import ben.study.engine.maths.Vector3f;
 import ben.study.engine.maths.Vector2f;
+import ben.study.engine.object.GameObject;
 import ben.study.graphics.*;
 import org.lwjgl.glfw.GLFW;
 
@@ -14,6 +15,7 @@ public class Game {
     public static Shader shader;
 
     public static Mesh mesh;
+    public static GameObject obj;
 
     public static void init() {
         input = new Input();
@@ -21,7 +23,8 @@ public class Game {
         win.setBackgroundColor(2.0f, 2.0f, 3.0f);
         win.setInput(input);
 //        shader = new Shader("shaders/texture.vert", "shaders/texture.frag");
-        shader = new Shader("shaders/uniform.vert", "shaders/uniform.frag");
+//        shader = new Shader("shaders/uniform.vert", "shaders/uniform.frag");
+        shader = new Shader("shaders/obj.vert", "shaders/obj.frag");
         shader.create();
         renderer = new Renderer(shader);
 
@@ -34,6 +37,9 @@ public class Game {
                 0, 1, 2,
                 0, 3, 2
         },new Texture("textures/image.png"));
+
+        obj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), mesh);
+
         mesh.create();
     }
 
@@ -42,7 +48,7 @@ public class Game {
         while (!win.shouldClose() && !input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
             win.update();
 
-            renderer.renderMesh(mesh);
+            renderer.renderMesh(obj);
 
             win.swapBuffers();
 
