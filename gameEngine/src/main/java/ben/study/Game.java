@@ -17,6 +17,7 @@ public class Game {
 
     public static Mesh mesh;
     public static GameObject obj;
+    public static GameObject[] objects = new GameObject[10];
     public static Camera camera = new Camera(new Vector3f(0, 0, 1), new Vector3f(0, 0, 0));
 
 
@@ -34,7 +35,10 @@ public class Game {
         mesh = Modules.Cube;
 
         obj = new GameObject(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), mesh);
-
+        objects[0] = obj;
+        for (int i = 0; i < objects.length; i++) {
+            objects[i] = new GameObject(new Vector3f((float) (Math.random() * 50 - 25), (float) (Math.random() * 50 - 25), (float) (Math.random() * 50 - 25)), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1), mesh);
+        }
         mesh.create();
     }
 
@@ -42,13 +46,19 @@ public class Game {
         init();
         while (!win.shouldClose() && !input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
             win.update();
-            //obj.update();
-            camera.update();
+//            obj.update();
 
-            renderer.renderMesh(obj, camera);
+            // First person
+//            camera();
+            // third person
+            camera.update(obj);
+
+            for (int i = 0; i < objects.length; i++) {
+                renderer.renderMesh(objects[i], camera);
+            }
+            //renderer.renderMesh(obj, camera);
 
             win.swapBuffers();
-
 
             if (input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 win.close();
