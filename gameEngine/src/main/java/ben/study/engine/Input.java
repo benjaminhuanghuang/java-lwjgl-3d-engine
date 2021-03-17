@@ -3,8 +3,8 @@ package ben.study.engine;
 import org.lwjgl.glfw.*;
 
 public class Input {
-    private boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
-    private boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
+    private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
+    private static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private double mouseX, mouseY;
     private double scrollX, scrollY;
 
@@ -59,11 +59,11 @@ public class Input {
         return scrollY;
     }
 
-    public boolean isKeyDown(int key) {
+    public static boolean isKeyDown(int key) {
         return keys[key];
     }
 
-    public boolean isButtonDown(int key) {
+    public static boolean isButtonDown(int key) {
         return buttons[key];
     }
 
