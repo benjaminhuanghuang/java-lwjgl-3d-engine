@@ -4,6 +4,7 @@ import ben.study.engine.Input;
 import ben.study.engine.Window;
 import ben.study.engine.maths.Vector3f;
 import ben.study.engine.maths.Vector2f;
+import ben.study.engine.object.Camera;
 import ben.study.engine.object.GameObject;
 import ben.study.graphics.*;
 import org.lwjgl.glfw.GLFW;
@@ -16,6 +17,8 @@ public class Game {
 
     public static Mesh mesh;
     public static GameObject obj;
+    public static Camera camera = new Camera(new Vector3f(0, 0, 1), new Vector3f(0, 0, 0));
+
 
     public static void init() {
         input = new Input();
@@ -26,7 +29,7 @@ public class Game {
 //        shader = new Shader("shaders/uniform.vert", "shaders/uniform.frag");
         shader = new Shader("shaders/obj.vert", "shaders/obj.frag");
         shader.create();
-        renderer = new Renderer(shader);
+        renderer = new Renderer(win, shader);
 
         mesh = new Mesh(new Vertex[]{
                 new Vertex(new Vector3f(-0.5f,  0.5f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f), new Vector2f(0.0f, 0.0f)),
@@ -47,8 +50,10 @@ public class Game {
         init();
         while (!win.shouldClose() && !input.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
             win.update();
+            obj.update();
 
-            renderer.renderMesh(obj);
+
+            renderer.renderMesh(obj, camera);
 
             win.swapBuffers();
 

@@ -1,5 +1,6 @@
 package ben.study.engine;
 
+import ben.study.engine.maths.Matrix4f;
 import ben.study.engine.maths.Vector3f;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -29,6 +30,7 @@ public class Window {
     private boolean isResized;
     private boolean isFullscreen;
     private int[] windowPosX = new int[1], windowPosY = new int[1];
+    private Matrix4f projection;
 
 
     public Window(int w, int h, String t) {
@@ -39,6 +41,7 @@ public class Window {
         init();
 
         time = System.currentTimeMillis();
+        projection = Matrix4f.projection(70.0f, (float) width / (float) height, 0.1f, 1000.0f);
     }
 
     public void init() {
@@ -153,7 +156,9 @@ public class Window {
             glfwSetWindowMonitor(glfwWindow, 0, windowPosX[0], windowPosY[0], width, height, 0);
         }
     }
-
+    public Matrix4f getProjectionMatrix() {
+        return projection;
+    }
     public void destroy() {
         input.destroy();
         glfwWindowShouldClose(glfwWindow);
