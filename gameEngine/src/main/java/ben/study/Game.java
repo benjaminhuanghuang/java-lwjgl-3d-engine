@@ -20,7 +20,8 @@ public class Game {
         win = new Window(1280, 760, "Game");
         win.setBackgroundColor(2.0f, 2.0f, 3.0f);
         win.setInput(input);
-        shader = new Shader("shaders/texture.vert", "shaders/texture.frag");
+//        shader = new Shader("shaders/texture.vert", "shaders/texture.frag");
+        shader = new Shader("shaders/uniform.vert", "shaders/uniform.frag");
         shader.create();
         renderer = new Renderer(shader);
 
