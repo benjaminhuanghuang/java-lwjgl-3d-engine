@@ -1,5 +1,6 @@
 package ben.study.engine;
 
+import ben.study.engine.maths.Vector3f;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
@@ -12,6 +13,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+
 public class Window {
     private int width, height;
 
@@ -23,7 +25,7 @@ public class Window {
     private int frames;
     private long time;
 
-    private float backgroundR, backgroundG, backgroundB;
+    private Vector3f background = new Vector3f(0,0,0);
     private boolean isResized;
     private boolean isFullscreen;
     private int[] windowPosX = new int[1], windowPosY = new int[1];
@@ -112,7 +114,7 @@ public class Window {
         }
 
         // clear window
-        glClearColor(backgroundR, backgroundG, backgroundB, 1.0f);
+        glClearColor(background.getX(), background.getY(), background.getZ(), 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glfwPollEvents();
@@ -135,9 +137,7 @@ public class Window {
     }
 
     public void setBackgroundColor(float r, float g, float b){
-        this.backgroundR = r;
-        this.backgroundG = g;
-        this.backgroundB = b;
+        this.background.set(r, g, b);
     }
     public boolean isFullscreen() {
         return isFullscreen;
