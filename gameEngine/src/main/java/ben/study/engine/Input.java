@@ -5,7 +5,7 @@ import org.lwjgl.glfw.*;
 public class Input {
     private static boolean[] keys = new boolean[GLFW.GLFW_KEY_LAST];
     private static boolean[] buttons = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
-    private double mouseX, mouseY;
+    private static double mouseX, mouseY;
     private double scrollX, scrollY;
 
     private GLFWKeyCallback keyboardCallback;
@@ -43,11 +43,11 @@ public class Input {
         };
     }
 
-    public double getMouseX() {
+    public static double getMouseX() {
         return mouseX;
     }
 
-    public double getMouseY() {
+    public static double getMouseY() {
         return mouseY;
     }
 
